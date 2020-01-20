@@ -1,0 +1,100 @@
+{
+    "description": "Henry Hub Natural Gas Spot Price (Dollars per Million Btu). Data is sourced from the United Energy Information Administrtion and turned into a standard normalized CSV.",
+    "image": "http://assets.okfn.org/p/opendatahandbook/img/data-wrench.png",
+    "keywords": [
+        "EIA",
+        "Energy",
+        "Natural Gas",
+        "Natural Gas Price",
+        "Gas Spot Price",
+        "Gas Price",
+        "Price",
+        "Gas",
+        "Henry Hub",
+        "eia.gov"
+    ],
+    "last_updated": "2020-01-19 20:30:57",
+    "licenses": [
+        {
+            "name": "ODC-PDDL-1.0",
+            "path": "http://opendatacommons.org/licenses/pddl/",
+            "title": "Open Data Commons Public Domain Dedication and License v1.0"
+        }
+    ],
+    "name": "natural-gas-prices",
+    "resources": [
+        {
+            "name": "daily-natural-gas-prices",
+            "path": "daily-natural-gas-prices.csv",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "Date",
+                        "type": "Datetime"
+                    },
+                    {
+                        "name": "Price",
+                        "type": "Int"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "weekly-natural-gas-prices",
+            "path": "weekly-natural-gas-prices.csv",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "Date",
+                        "type": "Datetime"
+                    },
+                    {
+                        "name": "Price",
+                        "type": "Int"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "monthly-natural-gas-prices",
+            "path": "monthly-natural-gas-prices.csv",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "Date",
+                        "type": "Datetime"
+                    },
+                    {
+                        "name": "Price",
+                        "type": "Int"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "yearly-natural-gas-prices",
+            "path": "yearly-natural-gas-prices.csv",
+            "schema": {
+                "fields": [
+                    {
+                        "name": "Date",
+                        "type": "Datetime"
+                    },
+                    {
+                        "name": "Price",
+                        "type": "Int"
+                    }
+                ]
+            }
+        }
+    ],
+    "sources": [
+        {
+            "name": "Natural Gas Spot Price",
+            "path": "http://www.eia.gov/dnav/ng/hist/rngwhhdm.htm",
+            "title": "Henry Hub Natural Gas Spot Price"
+        }
+    ],
+    "title": "Henry Hub Natural Gas Spot Price (Dollars per Million Btu)",
+    "version": "7"
+}

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>Henry Hub Natural Gas Spot Price (Dollars per Million Btu)</title>
+    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            position: relative;
+            box-sizing: border-box;
+        }
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+        }
+
+        text {
+            font-family: arial;
+            font-size: 12px;
+        }
+        .page {
+            display: block;
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            margin: -17px -54px;
+            z-index: 1;
+        }
+        .select-dropdown {
+            position: relative;
+            background-color: #e6e6e6;
+            width: auto;
+            float: left;
+            max-width: 100%;
+            border-radius: 2px;
+        }
+        .select-dropdown select {
+            font-family: "helvetica neue", helvetica;
+            font-size: 1rem;
+            font-weight: 200;
+            max-width: 100%;
+            padding: 8px 24px 8px 10px;
+            border: none;
+            background-color: transparent;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        .select-dropdown select:active,
+        .select-dropdown select:focus {
+            outline: none;
+            box-shadow: none;
+        }
+        .select-dropdown:after {
+            content: " ";
+            position: absolute;
+            top: 50%;
+            margin-top: -2px;
+            right: 8px;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid #aaa;
+        }
+        path.line {
+            fill: none;
+            stroke: red;
+            stroke-width: 3px;
+        }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: slategray;
+            shape-rendering: crispEdges;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <div class="select-dropdown">
+            <label for="interval">Select Interval</label>
+            <select name="interval" onchange="drawLineGraph(this.value)">
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+            </select>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var parseDate = d3.timeParse("%Y-%m-%d %H:%M:%S");
+        var margin = { left: 50, right: 20, top: 20, bottom: 50 };
+        var width = 960 - margin.left - margin.right;
+        var height = 500 - margin.top - margin.bottom;
+        var max = 0;
+        var xNudge = 50;
+        var yNudge = 20;
+        var minDate = new Date();
+        var maxDate = new Date();
+
+        drawLineGraph("daily")
+
+        function drawLineGraph(interval) {
+            d3.select("svg").remove();
+            d3.csv(`${interval}-natural-gas-prices.csv`)
+                .row(function (d) { return { Date: parseDate(d.Date), Price: parseFloat(d.Price) }; })
+                .get(function (error, rows) {
+                    max = d3.max(rows, function (d) { return d.Price; });
+                    minDate = d3.min(rows, function (d) { return d.Date; });
+                    maxDate = d3.max(rows, function (d) { return d.Date; });
+                    var y = d3.scaleLinear()
+                        .domain([0, max])
+                        .range([height, 0]);
+
+                    var x = d3.scaleTime()
+                        .domain([minDate, maxDate])
+                        .range([0, width]);
+
+                    var yAxis = d3.axisLeft(y);
+                    var xAxis = d3.axisBottom(x);
+                    var line = d3.line()
+                        .x(function (d) { return x(d.Date); })
+                        .y(function (d) { return y(d.Price); })
+                        .curve(d3.curveCardinal);
+
+                    var svg = d3.select("body").append("svg").attr("id", "svg").attr("height", "100%").attr("width", "100%");
+                    var chartGroup = svg.append("g").attr("class", "chartGroup").attr("transform", "translate(" + xNudge + "," + yNudge + ")");
+                    chartGroup.append("path")
+                        .attr("class", "line")
+                        .attr("d", function (d) { return line(rows); })
+
+                    chartGroup.append("g")
+                        .attr("class", "axis x")
+                        .attr("transform", "translate(0," + height + ")")
+                        .call(xAxis);
+
+                    chartGroup.append("g")
+                        .attr("class", "axis y")
+                        .call(yAxis);
+                });
+        }
+    </script>
+</body>
+
+</html>
